@@ -88,13 +88,12 @@ func newNodeRegister(
 			default:
 				n.register()
 				func() {
-					ticker := time.NewTicker(1 * time.Second)
-					defer ticker.Stop() // 确保释放资源
-
+					ctx, cancel := context.WithTimeout(n.ctx, 1*time.Second)
+					defer cancel()
 					select {
 					case <-n.ctx.Done():
 						return
-					case <-ticker.C:
+					case <-ctx.Done():
 					}
 				}()
 

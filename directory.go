@@ -142,16 +142,16 @@ func (w *etcdWatch) init(prefix string, fn watchfn) {
 				}
 			}()
 		}
+		func() {
+			ctx, cancel := context.WithTimeout(w.ctx, 1*time.Second)
+			defer cancel()
+			select {
+			case <-ctx.Done():
 
-		ticker := time.NewTicker(1 * time.Second)
-		defer ticker.Stop() // 确保释放资源
-
-		select {
-		case <-ticker.C:
-
-		case <-w.ctx.Done():
-			return
-		}
+			case <-w.ctx.Done():
+				return
+			}
+		}()
 
 	}
 }
