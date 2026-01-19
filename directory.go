@@ -97,7 +97,7 @@ func (w *etcdWatch) init(prefix string, fn watchfn) {
 				fn(maps.Clone(m))
 
 				watchChan := w.client.Watch(w.ctx, prefix, clientv3.WithPrefix())
-				ticker := time.NewTicker(10 * time.Second)
+				ticker := time.NewTicker(5 * time.Second)
 				defer ticker.Stop() // 确保释放资源
 				for {
 					select {
